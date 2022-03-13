@@ -1,0 +1,43 @@
+kpatel@KPATEL-MBP alpaca-api-performance-testing % mvn clean package
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ---------------< com.ker:alpaca-api-performance-testing >---------------
+[INFO] Building Alpaca API Performance Testing 1.0.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ alpaca-api-performance-testing ---
+[INFO] Deleting /Users/kpatel/Documents/ker/alpaca-api-performance-testing/target
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ alpaca-api-performance-testing ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/kpatel/Documents/ker/alpaca-api-performance-testing/src/main/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ alpaca-api-performance-testing ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ alpaca-api-performance-testing ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 3 resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ alpaca-api-performance-testing ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO]
+[INFO] --- scala-maven-plugin:4.5.6:testCompile (default) @ alpaca-api-performance-testing ---
+[INFO] Using incremental compilation using Mixed compile order
+[INFO] Compiler bridge file: /Users/kpatel/.sbt/1.0/zinc/org.scala-sbt/org.scala-sbt-compiler-bridge_2.13-1.5.8-bin_2.13.8__61.0-1.5.8_20211211T222914.jar
+[INFO] compiling 4 Scala sources to /Users/kpatel/Documents/ker/alpaca-api-performance-testing/target/test-classes ...
+[INFO] done compiling
+[INFO] compile in 4.2 s
+[INFO]
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ alpaca-api-performance-testing ---
+[INFO]
+[INFO] --- maven-jar-plugin:3.2.0:jar (default-jar) @ alpaca-api-performance-testing ---
+[WARNING] JAR will be empty - no content was marked for inclusion!
+[INFO] Building jar: /Users/kpatel/Documents/ker/alpaca-api-performance-testing/target/alpaca-api-performance-testing-1.0.0-SNAPSHOT.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.263 s
+[INFO] Finished at: 2022-03-13T14:16:03-07:00
+[INFO] ------------------------------------------------------------------------
+kpatel@KPATEL-MBP alpaca-api-performance-testing %
