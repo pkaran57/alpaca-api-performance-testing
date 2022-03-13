@@ -12,7 +12,7 @@ class AlpacaAPIMasterSimulation extends Simulation {
 
   private val stockSymbolFeeder: Feeder[Any] = csv("stock-symbols.csv").eager.queue()
 
-  private val getTrades: ScenarioBuilder = scenario("Get Trades")
+  private val getTradesScenario: ScenarioBuilder = scenario("Get Trades")
     .repeat(stockSymbolFeeder.size) {
       feed(stockSymbolFeeder)
         .group("get trades for #{stock_symbol}") {
@@ -29,7 +29,7 @@ class AlpacaAPIMasterSimulation extends Simulation {
         }
         .exec(session => session.remove("next_page_token"))
     }
-  private val getQuotes: ScenarioBuilder = scenario("Get Quotes")
+  private val getQuotesScenario: ScenarioBuilder = scenario("Get Quotes")
     .repeat(stockSymbolFeeder.size) {
       feed(stockSymbolFeeder)
         .group("get quotes for #{stock_symbol}") {
@@ -46,7 +46,7 @@ class AlpacaAPIMasterSimulation extends Simulation {
         }
         .exec(session => session.remove("next_page_token"))
     }
-  private val getBars: ScenarioBuilder = scenario("Get Bars")
+  private val getBarsScenario: ScenarioBuilder = scenario("Get Bars")
     .repeat(stockSymbolFeeder.size) {
       feed(stockSymbolFeeder)
         .group("get bars for #{stock_symbol}") {
@@ -65,9 +65,9 @@ class AlpacaAPIMasterSimulation extends Simulation {
         .exec(session => session.remove("next_page_token"))
     }
 
-  private val masterSimulation: PopulationBuilder = getTrades.inject(atOnceUsers(1))
-    .andThen(getQuotes.inject(atOnceUsers(1)))
-    .andThen(getBars.inject(atOnceUsers(1)))
+  private val masterSimulation: PopulationBuilder = getTradesScenario.inject(atOnceUsers(1))
+    .andThen(getQuotesScenario.inject(atOnceUsers(1)))
+    .andThen(getBarsScenario.inject(atOnceUsers(1)))
 
   setUp(masterSimulation)
     .protocols(http
