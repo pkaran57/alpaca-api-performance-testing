@@ -14,7 +14,7 @@ folder `alpaca-api-performance-testing`).
 
 ## How to execute Gatling simulation
 
-Execute `mvn gatling:test` command from the root directory of the project/repository (i.e. from
+After compiling, execute `mvn gatling:test` command from the root directory of the project/repository (i.e. from
 folder `alpaca-api-performance-testing`).
 
 After execution has been complete, the location of the output HTML file will be specified by the log line with
