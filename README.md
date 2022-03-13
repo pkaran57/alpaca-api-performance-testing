@@ -26,4 +26,8 @@ Please open the following file: /Users/kpatel/Documents/ker/alpaca-api-performan
 [INFO] ------------------------------------------------------------------------  
 [INFO] Total time:  10.246 s  
 [INFO] Finished at: 2022-03-13T13:47:06-07:00  
-[INFO] ------------------------------------------------------------------------  
+[INFO] ------------------------------------------------------------------------
+
+## Note
+
+* Alpaca API credentials are required to run the simulation successfully. 

@@ -92,6 +92,7 @@ class AlpacaAPIMasterSimulation extends Simulation {
     .protocols(http
       .baseUrl("https://data.alpaca.markets/v2")
       .headers(
+        // Alpaca api credentials go here
         Map("Apca-Api-Key-Id" -> "",
           "Apca-Api-Secret-Key" -> "")
       ))
