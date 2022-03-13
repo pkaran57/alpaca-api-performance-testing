@@ -7,8 +7,12 @@ import io.gatling.http.Predef._
 
 class AlpacaAPIMasterSimulation extends Simulation {
 
-  val stockSymbolFeeder: Feeder[Any] = csv("stock-symbols.csv").eager.queue()
-  val getTrades: ScenarioBuilder = scenario("Get Trades")
+  private val start: String = """2022-03-11T06:30:00-08:00""" // 6:30 AM PST March 11, 2022
+  private val end: String = """2022-03-11T13:00:00-08:00""" // 1 PM PST March 11, 2022
+
+  private val stockSymbolFeeder: Feeder[Any] = csv("stock-symbols.csv").eager.queue()
+
+  private val getTrades: ScenarioBuilder = scenario("Get Trades")
     .repeat(stockSymbolFeeder.size) {
       feed(stockSymbolFeeder)
         .group("get trades for #{stock_symbol}") {
@@ -25,7 +29,7 @@ class AlpacaAPIMasterSimulation extends Simulation {
         }
         .exec(session => session.remove("next_page_token"))
     }
-  val getQuotes: ScenarioBuilder = scenario("Get Quotes")
+  private val getQuotes: ScenarioBuilder = scenario("Get Quotes")
     .repeat(stockSymbolFeeder.size) {
       feed(stockSymbolFeeder)
         .group("get quotes for #{stock_symbol}") {
@@ -42,7 +46,7 @@ class AlpacaAPIMasterSimulation extends Simulation {
         }
         .exec(session => session.remove("next_page_token"))
     }
-  val getBars: ScenarioBuilder = scenario("Get Bars")
+  private val getBars: ScenarioBuilder = scenario("Get Bars")
     .repeat(stockSymbolFeeder.size) {
       feed(stockSymbolFeeder)
         .group("get bars for #{stock_symbol}") {
@@ -60,8 +64,7 @@ class AlpacaAPIMasterSimulation extends Simulation {
         }
         .exec(session => session.remove("next_page_token"))
     }
-  private val start: String = """2022-03-11T06:30:00-08:00""" // 6:30 AM PST March 11, 2022
-  private val end: String = """2022-03-11T13:00:00-08:00""" // 1 PM PST March 11, 2022
+
   private val masterSimulation: PopulationBuilder = getTrades.inject(atOnceUsers(1))
     .andThen(getQuotes.inject(atOnceUsers(1)))
     .andThen(getBars.inject(atOnceUsers(1)))
