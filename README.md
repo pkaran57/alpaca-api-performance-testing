@@ -9,7 +9,7 @@ Performance testing for Alpaca APIs.
 
 ## How to compile
 
-Execute `mvn clean install` command from the root directory of the project/repository (i.e. from
+Execute `mvn clean package` command from the root directory of the project/repository (i.e. from
 folder `alpaca-api-performance-testing`).
 
 ## How to execute Gatling simulation
