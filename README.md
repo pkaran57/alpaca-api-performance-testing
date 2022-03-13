@@ -28,6 +28,9 @@ Please open the following file: /Users/kpatel/Documents/ker/alpaca-api-performan
 [INFO] Finished at: 2022-03-13T13:47:06-07:00  
 [INFO] ------------------------------------------------------------------------
 
+Open the HTML file to see the Gatling report showing execution times for various scenarios in
+the `src/test/scala/com/ker/AlpacaAPIMasterSimulation.scala` simulation.
+
 ## Note
 
 * Alpaca API credentials are required to run the simulation successfully. 
