@@ -1,6 +1,11 @@
 # alpaca-api-performance-testing
 
-Performance testing for Alpaca APIs.
+Repository containing Gatling Simulation to measure performance/execution/response-time of Alpaca APIs. 
+
+The following Alpaca APIs are tested (i.e. their execution times measured for various stock symbols):
+* [Get Trades By Symbol ](https://alpaca.markets/docs/api-references/market-data-api/stock-pricing-data/historical/#get-trades-by-symbol)
+* [Get quotes for a single given ticker symbol at a specified date](https://alpaca.markets/docs/api-references/market-data-api/stock-pricing-data/historical/#quotes)
+* [Get aggregate historical data for the requested security](https://alpaca.markets/docs/api-references/market-data-api/stock-pricing-data/historical/#bars)
 
 ## Prerequisites
 

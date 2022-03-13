@@ -1,0 +1,10 @@
+{
+  "simulation": "com.ker.AlpacaAPIMasterSimulation",
+  "simulationId": "alpacaapimastersimulation",
+  "start": 1647206243717,
+  "description": "",
+  "scenarios": ["Get Trades", "Get Quotes", "Get 5 minutes bars"],
+  "assertions": [
+
+  ]
+}
