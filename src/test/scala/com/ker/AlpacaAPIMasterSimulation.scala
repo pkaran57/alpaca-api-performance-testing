@@ -15,64 +15,71 @@ class AlpacaAPIMasterSimulation extends Simulation {
   private val totalNumberOfStockSymbolsInCSV: Int = getStockSymbolsCSVFeeder.size
   // scenario that gets trades for all the stock symbols specified in "stock-symbols.csv"
   private val getTradesScenario: ScenarioBuilder = scenario("Get Trades")
-    .repeat(totalNumberOfStockSymbolsInCSV) {
-      feed(getStockSymbolsCSVFeeder)
-        .group("get trades for #{stock_symbol}") {
-          // iterate through all pages of trades for a given symbol
-          doWhile(session => if (session("next_page_token").validate[String].toOption.isDefined) true else false, "counter") {
-            exec(http("page #{counter}")
-              .get("/stocks/#{stock_symbol}/trades")
-              .queryParam("""start""", start) // Note the triple double quotes: used in Scala for protecting a whole chain of characters (no need for backslash)
-              .queryParam("""end""", end)
-              .queryParam("""limit""", """10000""")
-              .queryParam("""page_token""", session => if (session.contains("next_page_token")) session("next_page_token").as[String] else "")
-              .check(status is 200)
-              .check(jsonPath("$.next_page_token").saveAs("next_page_token")))
+    .group("Get trades") {
+      repeat(totalNumberOfStockSymbolsInCSV) {
+        feed(getStockSymbolsCSVFeeder)
+          .group("get trades for #{stock_symbol}") {
+            // iterate through all pages of trades for a given symbol
+            doWhile(session => if (session("next_page_token").validate[String].toOption.isDefined) true else false, "counter") {
+              exec(http("page #{counter}")
+                .get("/stocks/#{stock_symbol}/trades")
+                .queryParam("""start""", start) // Note the triple double quotes: used in Scala for protecting a whole chain of characters (no need for backslash)
+                .queryParam("""end""", end)
+                .queryParam("""limit""", """10000""")
+                .queryParam("""page_token""", session => if (session.contains("next_page_token")) session("next_page_token").as[String] else "")
+                .check(status is 200)
+                .check(jsonPath("$.next_page_token").saveAs("next_page_token")))
+            }
           }
-        }
-        // reset "next_page_token" session attribute for next stock symbol
-        .exec(session => session.remove("next_page_token"))
+          // reset "next_page_token" session attribute for next stock symbol
+          .exec(session => session.remove("next_page_token"))
+      }
     }
+
   // scenario that gets quotes for all the stock symbols specified in "stock-symbols.csv"
   private val getQuotesScenario: ScenarioBuilder = scenario("Get Quotes")
-    .repeat(totalNumberOfStockSymbolsInCSV) {
-      feed(getStockSymbolsCSVFeeder)
-        .group("get quotes for #{stock_symbol}") {
-          // iterate through all pages of quotes for a given symbol
-          doWhile(session => if (session("next_page_token").validate[String].toOption.isDefined) true else false, "counter") {
-            exec(http("page #{counter}")
-              .get("/stocks/#{stock_symbol}/quotes")
-              .queryParam("""start""", start) // Note the triple double quotes: used in Scala for protecting a whole chain of characters (no need for backslash)
-              .queryParam("""end""", end)
-              .queryParam("""limit""", """10000""")
-              .queryParam("""page_token""", session => if (session.contains("next_page_token")) session("next_page_token").as[String] else "")
-              .check(status is 200)
-              .check(jsonPath("$.next_page_token").saveAs("next_page_token")))
+    .group("Get Quotes") {
+      repeat(totalNumberOfStockSymbolsInCSV) {
+        feed(getStockSymbolsCSVFeeder)
+          .group("get quotes for #{stock_symbol}") {
+            // iterate through all pages of quotes for a given symbol
+            doWhile(session => if (session("next_page_token").validate[String].toOption.isDefined) true else false, "counter") {
+              exec(http("page #{counter}")
+                .get("/stocks/#{stock_symbol}/quotes")
+                .queryParam("""start""", start) // Note the triple double quotes: used in Scala for protecting a whole chain of characters (no need for backslash)
+                .queryParam("""end""", end)
+                .queryParam("""limit""", """10000""")
+                .queryParam("""page_token""", session => if (session.contains("next_page_token")) session("next_page_token").as[String] else "")
+                .check(status is 200)
+                .check(jsonPath("$.next_page_token").saveAs("next_page_token")))
+            }
           }
-        }
-        // reset "next_page_token" session attribute for next stock symbol
-        .exec(session => session.remove("next_page_token"))
+          // reset "next_page_token" session attribute for next stock symbol
+          .exec(session => session.remove("next_page_token"))
+      }
     }
   // scenario that gets 5Min bars for all the stock symbols specified in "stock-symbols.csv"
   private val getBarsScenario: ScenarioBuilder = scenario("Get 5 minutes bars")
-    .repeat(totalNumberOfStockSymbolsInCSV) {
-      feed(getStockSymbolsCSVFeeder)
-        .group("get bars for #{stock_symbol}") {
-          // iterate through all pages of bars for a given symbol
-          doWhile(session => if (session("next_page_token").validate[String].toOption.isDefined) true else false, "counter") {
-            exec(http("page #{counter}")
-              .get("/stocks/#{stock_symbol}/bars")
-              .queryParam("""start""", start) // Note the triple double quotes: used in Scala for protecting a whole chain of characters (no need for backslash)
-              .queryParam("""end""", end)
-              .queryParam("""limit""", """10000""")
-              .queryParam("""timeframe""", """5Min""")
-              .queryParam("""page_token""", session => if (session.contains("next_page_token")) session("next_page_token").as[String] else "")
-              .check(status is 200)
-              .check(jsonPath("$.next_page_token").saveAs("next_page_token")))
+    .group("Get 5 minutes bars") {
+      repeat(totalNumberOfStockSymbolsInCSV) {
+        feed(getStockSymbolsCSVFeeder)
+          .group("get bars for #{stock_symbol}") {
+            // iterate through all pages of bars for a given symbol
+            doWhile(session => if (session("next_page_token").validate[String].toOption.isDefined) true else false, "counter") {
+              exec(http("page #{counter}")
+                .get("/stocks/#{stock_symbol}/bars")
+                .queryParam("""start""", start) // Note the triple double quotes: used in Scala for protecting a whole chain of characters (no need for backslash)
+                .queryParam("""end""", end)
+                .queryParam("""limit""", """10000""")
+                .queryParam("""timeframe""", """5Min""")
+                .queryParam("""page_token""", session => if (session.contains("next_page_token")) session("next_page_token").as[String] else "")
+                .check(status is 200)
+                .check(jsonPath("$.next_page_token").saveAs("next_page_token")))
+            }
           }
-        }
-        // reset "next_page_token" session attribute for next stock symbol
-        .exec(session => session.remove("next_page_token"))
+          // reset "next_page_token" session attribute for next stock symbol
+          .exec(session => session.remove("next_page_token"))
+      }
     }
 
   /**
