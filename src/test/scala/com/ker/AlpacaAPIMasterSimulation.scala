@@ -11,13 +11,12 @@ class AlpacaAPIMasterSimulation extends Simulation {
   private val start: String = """2022-03-11T06:30:00-08:00""" // 6:30 AM PST March 11, 2022
   private val end: String = """2022-03-11T13:00:00-08:00""" // 1 PM PST March 11, 2022
 
-  // read in the stock symbols under "src/test/resources/stock-symbols.csv"
-  private val stockSymbolFeeder: Feeder[Any] = csv("stock-symbols.csv").eager.queue()
-
+  // number of stock symbols in "src/test/resources/stock-symbols.csv"
+  private val totalNumberOfStockSymbolsInCSV: Int = getStockSymbolsCSVFeeder.size
   // scenario that gets trades for all the stock symbols specified in "stock-symbols.csv"
   private val getTradesScenario: ScenarioBuilder = scenario("Get Trades")
-    .repeat(stockSymbolFeeder.size) {
-      feed(stockSymbolFeeder)
+    .repeat(totalNumberOfStockSymbolsInCSV) {
+      feed(getStockSymbolsCSVFeeder)
         .group("get trades for #{stock_symbol}") {
           // iterate through all pages of trades for a given symbol
           doWhile(session => if (session("next_page_token").validate[String].toOption.isDefined) true else false, "counter") {
@@ -34,11 +33,10 @@ class AlpacaAPIMasterSimulation extends Simulation {
         // reset "next_page_token" session attribute for next stock symbol
         .exec(session => session.remove("next_page_token"))
     }
-
   // scenario that gets quotes for all the stock symbols specified in "stock-symbols.csv"
   private val getQuotesScenario: ScenarioBuilder = scenario("Get Quotes")
-    .repeat(stockSymbolFeeder.size) {
-      feed(stockSymbolFeeder)
+    .repeat(totalNumberOfStockSymbolsInCSV) {
+      feed(getStockSymbolsCSVFeeder)
         .group("get quotes for #{stock_symbol}") {
           // iterate through all pages of quotes for a given symbol
           doWhile(session => if (session("next_page_token").validate[String].toOption.isDefined) true else false, "counter") {
@@ -55,11 +53,10 @@ class AlpacaAPIMasterSimulation extends Simulation {
         // reset "next_page_token" session attribute for next stock symbol
         .exec(session => session.remove("next_page_token"))
     }
-
   // scenario that gets 5Min bars for all the stock symbols specified in "stock-symbols.csv"
   private val getBarsScenario: ScenarioBuilder = scenario("Get 5 minutes bars")
-    .repeat(stockSymbolFeeder.size) {
-      feed(stockSymbolFeeder)
+    .repeat(totalNumberOfStockSymbolsInCSV) {
+      feed(getStockSymbolsCSVFeeder)
         .group("get bars for #{stock_symbol}") {
           // iterate through all pages of bars for a given symbol
           doWhile(session => if (session("next_page_token").validate[String].toOption.isDefined) true else false, "counter") {
@@ -77,6 +74,15 @@ class AlpacaAPIMasterSimulation extends Simulation {
         // reset "next_page_token" session attribute for next stock symbol
         .exec(session => session.remove("next_page_token"))
     }
+
+  /**
+   * Read in the stock symbols under "src/test/resources/stock-symbols.csv" and return an associated feeder
+   *
+   * @return queue feeder containing all stock symbols in csv
+   */
+  private def getStockSymbolsCSVFeeder: Feeder[Any] = {
+    csv("stock-symbols.csv").eager.queue()
+  }
 
   private val masterSimulation: PopulationBuilder = getTradesScenario.inject(atOnceUsers(1))
     .andThen(getQuotesScenario.inject(atOnceUsers(1)))
