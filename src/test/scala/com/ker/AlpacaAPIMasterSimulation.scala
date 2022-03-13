@@ -22,6 +22,7 @@ class AlpacaAPIMasterSimulation extends Simulation {
             // iterate through all pages of trades for a given symbol
             doWhile(session => if (session("next_page_token").validate[String].toOption.isDefined) true else false, "counter") {
               exec(http("page #{counter}")
+                // See https://alpaca.markets/docs/api-references/market-data-api/stock-pricing-data/historical/#get-trades-by-symbol for info on this endpoint
                 .get("/stocks/#{stock_symbol}/trades")
                 .queryParam("""start""", start) // Note the triple double quotes: used in Scala for protecting a whole chain of characters (no need for backslash)
                 .queryParam("""end""", end)
@@ -45,6 +46,7 @@ class AlpacaAPIMasterSimulation extends Simulation {
             // iterate through all pages of quotes for a given symbol
             doWhile(session => if (session("next_page_token").validate[String].toOption.isDefined) true else false, "counter") {
               exec(http("page #{counter}")
+                // See https://alpaca.markets/docs/api-references/market-data-api/stock-pricing-data/historical/#quotes for info on this endpoint
                 .get("/stocks/#{stock_symbol}/quotes")
                 .queryParam("""start""", start) // Note the triple double quotes: used in Scala for protecting a whole chain of characters (no need for backslash)
                 .queryParam("""end""", end)
@@ -67,6 +69,7 @@ class AlpacaAPIMasterSimulation extends Simulation {
             // iterate through all pages of bars for a given symbol
             doWhile(session => if (session("next_page_token").validate[String].toOption.isDefined) true else false, "counter") {
               exec(http("page #{counter}")
+                // See https://alpaca.markets/docs/api-references/market-data-api/stock-pricing-data/historical/#bars for info on this endpoint
                 .get("/stocks/#{stock_symbol}/bars")
                 .queryParam("""start""", start) // Note the triple double quotes: used in Scala for protecting a whole chain of characters (no need for backslash)
                 .queryParam("""end""", end)
@@ -91,15 +94,18 @@ class AlpacaAPIMasterSimulation extends Simulation {
     csv("stock-symbols.csv").eager.queue()
   }
 
+  // master simulation consisting of the 3 scenarios above being executed one after the another
   private val masterSimulation: PopulationBuilder = getTradesScenario.inject(atOnceUsers(1))
     .andThen(getQuotesScenario.inject(atOnceUsers(1)))
     .andThen(getBarsScenario.inject(atOnceUsers(1)))
 
+  // run master simulation here
   setUp(masterSimulation)
     .protocols(http
+      // api base URL - https://alpaca.markets/docs/api-references/market-data-api/stock-pricing-data/#base-url
       .baseUrl("https://data.alpaca.markets/v2")
       .headers(
-        // Alpaca api credentials go here
+        // Alpaca api authentication credentials/headers go here, leaving them blank
         Map("Apca-Api-Key-Id" -> "",
           "Apca-Api-Secret-Key" -> "")
       ))
