@@ -1,5 +1,8 @@
 import java.nio.file.Paths
 
+/**
+ * This file is optional. Only needed when running from IDE.
+ */
 object IDEPathHelper {
 
   private val projectRootDir = Paths.get(getClass.getClassLoader.getResource("gatling.conf").toURI).getParent.getParent.getParent
